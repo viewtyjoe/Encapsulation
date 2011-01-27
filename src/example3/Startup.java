@@ -28,14 +28,15 @@ public class Startup {
         // is this really necessary?
         engine.setCylinderCount(6);
         Car car = new Car();
-        //car.setEngine(engine);
+        // What happens if you foret to do this? Try commenting this line out.
+        // See what you get? It's too easy to make a mistake.
+        car.setEngine(engine);
         // Is this what you do? Do you tell the engine to start? No!
         // You tell the car to start by turning a key.
-        engine = car.getEngine();
         engine.start();
 
         // Again ... we're talking to the wrong object... should be car!
-        System.out.println("Car running status: " + engine.isRunning());
-        System.out.println("Engine Type: " + engine.getCylinderCount());
+        System.out.println("Car running status: " + car.getEngine().isRunning());
+        System.out.println("Engine Type: " + car.getEngine().getCylinderCount());
     }
 }
