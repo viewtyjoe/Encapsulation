@@ -2,9 +2,11 @@ package lab1;
 
 /**
  * In this lab your challenge is to fix the code in both classes to use
- * proper encapsulation and best practices as explained by your instructor.
+ * proper encapsulation and the four other best practices as explained by 
+ * your instructor.
  *
- * @author jlombardo
+ * @author      Jim Lombardo, WCTC Instructor
+ * @version     1.01
  */
 public class Startup {
     public static void main(String[] args) {
@@ -12,20 +14,12 @@ public class Startup {
         employee.firstName = "Peter";
         employee.lastName = "Piper";
         employee.ssn = "333-1234";
-        employee.meetWithHrForBenefitAndSalryInfo();
+        
         employee.meetDepartmentStaff();
+        employee.meetWithHrForBenefitAndSalryInfo();
         employee.reviewDeptPolicies();
-        String status = employee.getStatus();
 
-        if(status.equals("New Hire")) {
-            System.out.println("Something went wrong with your code!"
-                    + " Should be 'Regular Employee'");
-        } else {
-            System.out.println(employee.firstName + " " + employee.lastName
-                    + " born on " + employee.birthDate.toString()
-                    + " SSN: " + employee.ssn + " is a " + employee.getStatus()
-                    + " located a Cube No. " + employee.cubeId);
-        }
+        System.out.println("The employee's status is: " + employee.getStatus());
     }
     
     

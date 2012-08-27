@@ -4,19 +4,20 @@ import java.util.Date;
 
 /**
  * In this lab your challenge is to fix the code in both classes to use
- * proper encapsulation and best practices as explained by your instructor.
+ * proper encapsulation and the four other best practices as explained by 
+ * your instructor.
  *
- * @author jlombardo
+ * @author      Jim Lombardo, WCTC Instructor
+ * @version     1.01
  */
 public class Employee {
     String firstName;
     String lastName;
     public String ssn;
     public Date birthDate;
-    private boolean orientationCompleted;
     boolean metWithHr;
     boolean metDeptStaff;
-    boolean revieweddeptPolicies;
+    boolean reviewedDeptPolicies;
     boolean movedIn;
     String cubeId;
 
@@ -24,35 +25,52 @@ public class Employee {
 
     }
 
-    public void completeOrientation() {
-        if(metWithHr && metDeptStaff
-           && revieweddeptPolicies && movedIn) {
-              orientationCompleted = true;
+    // Assume this must be performed first
+    public void meetWithHrForBenefitAndSalryInfo() {
+        metWithHr = true;
+    }
+
+    // Assume this is must be performed second
+    public void meetDepartmentStaff() {
+        if(metWithHr) {
+            metDeptStaff = true;
+        } else {
+            throw new IllegalStateException("Sorry, you cannot meet with "
+                    + "department staff until you have met with HR.");
         }
     }
 
-    public void meetWithHrForBenefitAndSalryInfo() {
-        this.metWithHr = true;
-    }
-
-    public void meetDepartmentStaff() {
-        this.metDeptStaff = true;
-    }
-
+    // Assume this must be performed third
     public void reviewDeptPolicies() {
-        this.revieweddeptPolicies = true;
+        if(metWithHr && metDeptStaff) {
+            reviewedDeptPolicies = true;
+        } else {
+            throw new IllegalStateException("Sorry, you cannot review "
+                    + " department policies until you have first met with HR "
+                    + "and then with department staff.");
+        }
     }
 
+    // Assume this must be performed 4th
     public void moveIntoCubicle(String cubeId) {
-        this.cubeId = cubeId;
-        this.movedIn = true;
+        if(metWithHr && metDeptStaff && reviewedDeptPolicies) {
+            this.cubeId = cubeId;
+            this.movedIn = true;
+        } else {
+            throw new IllegalStateException("Sorry, you cannot move in to a "
+                    + "cubicle until you have first met with HR "
+                    + "and then with department staff, and then reviewed"
+                    + "department policies.");
+        }
+
     }
 
     public String getStatus() {
-        if(this.orientationCompleted) {
-            return "Regular Employee";
+        if(metWithHr && metDeptStaff
+           && reviewedDeptPolicies && movedIn) {
+            return "Orientation is complete";
         } else {
-            return "New Hire";
+            return "Orientation in progress...";
         }
     }
 }

@@ -21,8 +21,8 @@ public class Cake {
 
     public void setQuantity(int quantity) {
         if(quantity <= 0 || quantity > 10) {
-            JOptionPane.showMessageDialog(null, "Sorry, you can only bake 1 - 10 cakes");
-            System.exit(1);
+            throw new IllegalArgumentException("quantity must be greater than 0...");
+            //System.exit(1);
         }
         this.quantity = quantity;
     }

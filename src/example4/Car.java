@@ -9,8 +9,8 @@ package example4;
  */
 public class Car {
     // NO magic numbers -- use constants
-    private static int MIN_CYL = 4;
-    private static int MAX_CYL = 12;
+    private static final int MIN_CYL = 4;
+    private static final int MAX_CYL = 12;
 
     private String engineType;
     private Engine engine;

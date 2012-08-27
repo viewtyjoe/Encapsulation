@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
  * @author jlombardo
  */
 public class Cake {
+    private String cakeName;
     //// Both of these properties violate encapsulation rules. All should be
     // declared private scope and should have getter and/or setter methods.
     ///////
@@ -24,6 +25,10 @@ public class Cake {
     //   be private, those that have arguments (setters) need validation rules.
     ////////
 
+    public void setCakeName(String name) {
+        this.cakeName = name;
+    }
+    
     public int getQuantity() {
         return quantity;
     }
