@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * In this lab your challenge is to fix the code in both classes to use
- * proper encapsulation and the four other best practices as explained by 
+ * proper encapsulation and the other best practices as explained by 
  * your instructor.
  *
  * @author      Jim Lombardo, WCTC Instructor
@@ -35,7 +35,7 @@ public class Employee {
         if(metWithHr) {
             metDeptStaff = true;
         } else {
-            throw new IllegalStateException("Sorry, you cannot meet with "
+            System.out.println("Sorry, you cannot meet with "
                     + "department staff until you have met with HR.");
         }
     }
@@ -45,7 +45,7 @@ public class Employee {
         if(metWithHr && metDeptStaff) {
             reviewedDeptPolicies = true;
         } else {
-            throw new IllegalStateException("Sorry, you cannot review "
+            System.out.println("Sorry, you cannot review "
                     + " department policies until you have first met with HR "
                     + "and then with department staff.");
         }
@@ -57,7 +57,7 @@ public class Employee {
             this.cubeId = cubeId;
             this.movedIn = true;
         } else {
-            throw new IllegalStateException("Sorry, you cannot move in to a "
+            System.out.println("Sorry, you cannot move in to a "
                     + "cubicle until you have first met with HR "
                     + "and then with department staff, and then reviewed"
                     + "department policies.");

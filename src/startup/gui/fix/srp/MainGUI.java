@@ -1,42 +1,32 @@
-package lab3;
+package startup.gui.fix.srp;
 
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import javax.swing.*;
 
 /**
- * This GUI class is simply a Java representation of the same project
- * presented in the Basic Logic & Programming (Visual Basic.Net) class.
- *
- * It is an example of a poorly designed program (architecturally speaking).
- * It violates many of the 5 basic design principles described recently by
- * your instructor. Your job is to fix as many of these problems as possible.
- * Don't worry if you see code that you don't understand (GUI-related, e.g.).
- * The problems are simple and easy to spot if you've done your homework and
- * listened to your instructor's presentation in class. The solution might be
- * to modify this code and/or add new classes.
+ * Here is the fixed version. Note how the GUI delegates part management and
+ * storage functions to the PartManager.
  *
  * @author      Jim Lombardo, WCTC Instructor
  * @version     1.00
 */
 public class MainGUI extends javax.swing.JFrame implements ActionListener {
     private final int MAX_RECS = 10;
-    private final int NOT_FOUND = -1;
+    private final Part NOT_FOUND = null;
+    private Part foundPart = NOT_FOUND;
 
-    String partNo;
-    int foundIndex = NOT_FOUND;
+    private String partNo;
     private String partDesc;
-    double partPrice;
-
-    String[] partNums = new String[10];
-    String[] partDescs = new String[10];
-    double[] partPrices = new double[10];
-    int emptyRow;
+    private double partPrice;
+    
+    private PartManager partManager;
 
     /** Creates new form MainGUI */
     public MainGUI() {
         initComponents();
         this.txtNewProdNo.requestFocus();
+        partManager = new PartManager();
     }
 
     /** This method is called from within the constructor to
@@ -75,7 +65,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
         setTitle("ACME Hardware Product Manager");
         setResizable(false);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18));
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("ACME Hardware");
 
         txtNewProdNo.setNextFocusableComponent(txtNewProdDesc);
@@ -151,7 +141,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
                                         .addComponent(txtCurDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                             .addComponent(txtCurPrice, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnUpdate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                                            .addComponent(btnUpdate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, Short.MAX_VALUE))
                                         .addComponent(txtCurProdNo, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,9 +151,8 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
                                         .addComponent(jLabel4)
                                         .addComponent(txtNewProdPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGap(29, 29, 29)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
-                        .addContainerGap(68, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -245,20 +234,18 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
         else if (evt.getSource() == btnDisplayList) {
             MainGUI.this.btnDisplayListActionPerformed(evt);
         }
+        else if (evt.getSource() == btnSortList) {
+            MainGUI.this.btnSortListActionPerformed(evt);
+        }
         else if (evt.getSource() == btnSearch) {
             MainGUI.this.btnSearchActionPerformed(evt);
         }
         else if (evt.getSource() == btnUpdate) {
             MainGUI.this.btnUpdateActionPerformed(evt);
         }
-        else if (evt.getSource() == btnSortList) {
-            MainGUI.this.btnSortListActionPerformed(evt);
-        }
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEnterRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterRecordActionPerformed
-        foundIndex = NOT_FOUND;
-
         partNo = this.txtNewProdNo.getText();
         partDesc = this.txtNewProdDesc.getText();
         try {
@@ -270,12 +257,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
             return;
         }
 
-        if (emptyRow > 10) {
-            JOptionPane.showMessageDialog(this, 
-                    "Sorry, you have reach the maximum of 10 items.\n"
-                    + "No more items can be saved.", "Maximum Reached", JOptionPane.WARNING_MESSAGE);
-
-        } else if (partNo.length() == 0 || partDesc.length() == 0 
+        if (partNo.length() == 0 || partDesc.length() == 0 
                 || this.txtNewProdPrice.getText().length() == 0)
         {
             JOptionPane.showMessageDialog(this, 
@@ -284,10 +266,7 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
             this.txtNewProdNo.requestFocus();
 
         } else {
-            partNums[emptyRow] = partNo;
-            partDescs[emptyRow] = partDesc;
-            partPrices[emptyRow] = partPrice;
-            this.emptyRow += 1;
+            partManager.addNewPart(partNo, partDesc, partPrice);
         }
 
         clearEntryFields();
@@ -297,20 +276,16 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         String searchNum = txtSearchPartNo.getText();
         if (searchNum != null && searchNum.length() > 0) {
-            for (int i = 0; i < this.partNums.length; i++) {
-                if (searchNum.equalsIgnoreCase(partNums[i])) {
-                    foundIndex = i;
-                    break;
-                }
-            }
-           if (foundIndex == NOT_FOUND) {
+           foundPart = partManager.findByPartNumber(searchNum);
+            
+           if (foundPart == NOT_FOUND) {
                 JOptionPane.showMessageDialog(this,
                     "Part Number not found. Please try again.",
                     "Not Found", JOptionPane.WARNING_MESSAGE);
            } else {
-                txtCurProdNo.setText(partNums[foundIndex]);
-                txtCurDesc.setText(partDescs[foundIndex]);
-                txtCurPrice.setText("" + partPrices[foundIndex]);
+                txtCurProdNo.setText(foundPart.getPartNumber());
+                txtCurDesc.setText(foundPart.getPartDesc());
+                txtCurPrice.setText("" + foundPart.getPartPrice());
            }
         } else {
                 JOptionPane.showMessageDialog(this,
@@ -325,14 +300,14 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
     }//GEN-LAST:event_btnDisplayListActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        if (foundIndex == NOT_FOUND) {
+        if (foundPart == NOT_FOUND) {
                 JOptionPane.showMessageDialog(this,
                     "Part Number not found. Please try again.",
                     "Search Failure", JOptionPane.WARNING_MESSAGE);
         } else {
-            partNums[foundIndex] = txtCurProdNo.getText();
-            partDescs[foundIndex] = txtCurDesc.getText();
-            partPrices[foundIndex] = Double.parseDouble(txtCurPrice.getText());
+            foundPart.setPartNumber(txtCurProdNo.getText());
+            foundPart.setPartDesc(txtCurDesc.getText());
+            foundPart.setPartPrice(Double.parseDouble(txtCurPrice.getText()));
             displayList();
             JOptionPane.showMessageDialog(this,
                 "Part updated successfully!",
@@ -348,9 +323,9 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
         NumberFormat nf = NumberFormat.getCurrencyInstance();
         listProducts.setText(""); // clear list
         listProducts.append("Part\tDesc\t\tPrice\n====\t====\t\t=====\n");
-        for (int i = 0 ; i < emptyRow; i++) {
-            String rLine = partNums[i] + "\t"
-                    + partDescs[i] + "\t\t" + nf.format(partPrices[i]) + "\n";
+        for (Part p : partManager.getParts()) {
+            String rLine = p.getPartNumber() + "\t"
+                    + p.getPartDesc() + "\t\t" + nf.format(p.getPartPrice()) + "\n";
             listProducts.append(rLine);
         }
     }
@@ -358,25 +333,8 @@ public class MainGUI extends javax.swing.JFrame implements ActionListener {
     // Sort by partNumber
     private void sortList() {
         // Only perform the sort if we have records
-        if(emptyRow > 0) {
-            // Bubble sort routine adapted from sample in text book...
-            // Make sure the operations are peformed on all 3 arrays!
-            for(int passNum = 1; passNum < emptyRow; passNum++) {
-                for(int i = 1; i <= emptyRow-passNum; i++) {
-                    String temp = "";
-                    temp += partPrices[i-1];
-                    partPrices[i-1] = partPrices[i];
-                    partPrices[i] = Double.parseDouble(temp);
-
-                    temp = partNums[i-1];
-                    partNums[i-1] = partNums[i];
-                    partNums[i] = temp;
-
-                    temp = partDescs[i-1];
-                    partDescs[i-1] = partDescs[i];
-                    partDescs[i] = temp;
-                }
-            }
+        if(partManager.getParts().length > 0) {
+            partManager.sortPartsByPartNumber();
             // Once it's sorted, display in the list box
             displayList();
         } else {

@@ -1,4 +1,4 @@
-package lab3;
+package startup.gui.fix.srp;
 
 /**
  * The responsibility of this class is to just start the program, which

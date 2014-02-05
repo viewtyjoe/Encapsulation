@@ -13,7 +13,7 @@ public class Engine {
         cylinderCount = numOfCylinders;
     }
 
-    public void start() {
+    public void startEngine() {
         if(!running) {
             running = true;
         }

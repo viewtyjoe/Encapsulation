@@ -34,7 +34,7 @@ public class Car {
 
     // Car delegates to engine
     public void start() {
-        engine.start();
+        engine.startEngine();
     }
 
     // Car delegates to engine
