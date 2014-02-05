@@ -8,6 +8,9 @@ package example3;
  */
 public class Car {
     private String engineType;
+    // This is compostion -- the engine object is a component of the Car object
+    // But it's used poorly here. Car does not delegate to Engine and it 
+    // doesn't hide what the Engine does (encapsulation)
     private Engine engine;
 
     // Is using the default constructor always a good idea?

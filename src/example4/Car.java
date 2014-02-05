@@ -13,6 +13,10 @@ public class Car {
     private static final int MAX_CYL = 12;
 
     private String engineType;
+    // This is good compostion -- the engine object is a component of the Car object
+    // It's used correctly here. Car delegates to Engine and the Engine itelf
+    // and its functions are hidden from the Startup class (or any other class)
+    // resulting in good encapsulation.
     private Engine engine;
 
     // Arguments validated and sensible default applied if illegal
